@@ -1,0 +1,8 @@
+with open('nuevaleak.txt', 'r') as file1:
+    with open('bd.txt', 'r') as file2:
+        with open ("finaleak.txt", "w") as out_file:
+            f2_lines = set(file2) #Porque no lo compara directamente con file2???
+            for line in file1: #Bucle linea a linea
+                if line not in f2_lines:
+                    out_file.write(line) #Crea el fichero
+                    f2_lines.add(line) #No sé que hace está
