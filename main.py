@@ -3,26 +3,30 @@ from requests.packages.urllib3.exceptions import InsecureRequestWarning
 
 requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
-with open ("test", "r") as f: #Importamos un fichero
-	lines = f.read().splitlines()  # Aqui le decimos que lea por linea y haga los saltos de URL
+with open ("palabras.txt", "r") as f: #Importamos un fichero
+	lines = f.read().splitlines()  # Aqui le decimos que lea por linea y haga los saltos
 
-PROTO = ['https://', 'http://']
-
-
-TLD = ['.site', '.xyz', '.online']  #  lista  '.com' '.es'
+PROTO = ['https://'] #, 'http://']
+TLD = ['.web.app', '.firebaseapp.com']  #  lista '.site', '.xyz', '.online', 
+PATH =  ['/ingreso']
 
 for dominio in lines:
-	for tlds in TLD: #Bucle anidado
-		for protos in PROTO:
+	for dominio1 in lines:
+			for tlds in TLD: #Bucle anidadaro
+				for path in PATH:
+					for protos in PROTO:
+						#print(protos + dominio + tlds)
+						try:
+							result = requests.get(protos + dominio + '-' + dominio1 + tlds + path, verify=False)							
+		
+							if result.status_code == 200:
+								sourceFile = open('dominioactivo1.txt', 'w')
+								print("Dominio activo:" + protos + dominio + '-' + dominio1 + tlds + path, file = sourceFile)
+								sourceFile.close()
+							else:
+								print("Dominio inactivo:" + protos + dominio + '-' + dominio1 + tlds + path)
 
-			#print(protos + dominio + tlds)
-			try:
-				result = requests.get(protos + dominio + tlds, verify=False)
-
-				if result.status_code == 200:
-					print("Dominio activo: " + protos + dominio + tlds) # wtf string tras string sin concatenar? 
-
-			except:
-				pass
-				#print("Dominio inactivo:" + protos + dominio + tlds)
-				continue #Le decimos que vuelva a recorrer
+						except:
+							#print("Dominio inactivo:" + protos + dominio + '-' + dominio1 + tlds + path)
+							pass
+							continue
